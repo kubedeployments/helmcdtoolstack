@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --chart
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: selhub
+  name: selhub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: selhub
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --chart
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: selhub
+    spec:
+      containers:
+        - image: selenium/hub
+          name: selhub
+          ports:
+            - containerPort: 4444
+          resources: {}
+      restartPolicy: Always
+status: {}

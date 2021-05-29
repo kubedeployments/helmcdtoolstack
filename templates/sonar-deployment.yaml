@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --chart
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: sonar
+  name: sonar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: sonar
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --chart
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: sonar
+    spec:
+      containers:
+        - env:
+            - name: SONARQUBE_JDBC_PASSWORD
+              value: sonar
+            - name: SONARQUBE_JDBC_URL
+              value: jdbc:h2://192.168.99.100/sonar
+            - name: SONARQUBE_JDBC_USERNAME
+              value: sonar
+          image: amesken/sonarqube
+          name: sonar
+          ports:
+            - containerPort: 9000
+          resources: {}
+          volumeMounts:
+            - mountPath: /opt/sonarqube/data
+              name: sonar-claim0
+            - mountPath: /opt/sonarqube/logs
+              name: sonar-claim1
+            - mountPath: /opt/sonarqube/extensions
+              name: sonar-claim2
+      restartPolicy: Always
+      volumes:
+        - name: sonar-claim0
+          persistentVolumeClaim:
+            claimName: sonar-claim0
+        - name: sonar-claim1
+          persistentVolumeClaim:
+            claimName: sonar-claim1
+        - name: sonar-claim2
+          persistentVolumeClaim:
+            claimName: sonar-claim2
+status: {}
